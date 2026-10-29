@@ -1,4 +1,5 @@
 package id.ac.upb.asetpinjam.model;
+import id.ac.upb.asetpinjam.config.Varian;
 
 import id.ac.upb.asetpinjam.kontrak.DapatDipinjam;
 
@@ -11,7 +12,7 @@ import id.ac.upb.asetpinjam.kontrak.DapatDipinjam;
  * Minggu 5: isi bisaDipinjam() dan ubah menjadi class abstrak
  * (TestSupport.aset(...) di folder test menyesuaikan sendiri, lihat docs/minggu-05.md).
  */
-public class Aset implements DapatDipinjam {
+public abstract class Aset implements DapatDipinjam {
     private String kode;
     private String nama;
     private StatusAset status;
@@ -73,19 +74,35 @@ public class Aset implements DapatDipinjam {
         this.kondisi = kondisi;
     }
 
-    /** TODO minggu 5: true hanya jika status TERSEDIA dan kondisi bukan RUSAK_BERAT. */
+    /** True hanya jika status TERSEDIA dan kondisi bukan RUSAK_BERAT. */
     @Override
     public boolean bisaDipinjam() {
-        throw new UnsupportedOperationException("TODO minggu 5");
+        return status == StatusAset.TERSEDIA && kondisi != Kondisi.RUSAK_BERAT;
     }
 
-    /** TODO minggu 3: dioverride tiap subclass agar mengembalikan jenis yang benar. */
-    public JenisAset getJenis() {
-        throw new UnsupportedOperationException("TODO minggu 3");
+    /** Dioverride tiap subclass agar mengembalikan jenis yang benar. */
+    public abstract JenisAset getJenis();
+
+    /**
+     * Menghitung denda keterlambatan.
+     * Dioverride tiap subclass karena multiplier berbeda per jenis aset.
+     */
+    public abstract long hitungDenda(int hariTerlambat);
+
+    protected final long hitungDendaDenganMultiplier(
+        int hariTerlambat, long multiplier) {
+
+    if (hariTerlambat < 0) {
+        throw new IllegalArgumentException(
+                "Hari terlambat tidak boleh negatif");
     }
 
-    /** TODO minggu 4: denda keterlambatan. Dioverride tiap subclass (aturan di docs/aturan-bisnis.md). */
-    public long hitungDenda(int hariTerlambat) {
-        throw new UnsupportedOperationException("TODO minggu 4");
+    if (hariTerlambat == 0) {
+        return 0L;
+    }
+
+    return (long) hariTerlambat
+            * multiplier
+            * Varian.aktif().dendaPerHari;
     }
 }

@@ -28,3 +28,10 @@ Salin setiap pertanyaan ambigu (nomor 1 sampai 7) ke sini dan jawab. Contoh:
 ## Asumsi lain
 
 Tambahkan di sini keputusan lain yang Anda ambil: rumus denda progresif, perubahan skema database, format error API, dan seterusnya.
+
+## A-05: rumus denda progresif
+- Pertanyaan: Bagaimana denda progresif dihitung dibandingkan denda flat?
+- Keputusan: Hari ke-0 sampai ke-7 memakai denda flat. Mulai hari ke-8, denda = denda flat + `(hari terlambat - 7) x denda satu hari aset tersebut`. Dengan begitu tarif harian menjadi dua kali lipat setelah minggu pertama.
+- Alasan: Rumus ini sederhana, selalu tidak lebih murah dari denda flat, tidak pernah turun ketika hari bertambah, dan pada hari ke-30 pasti lebih mahal dari denda flat untuk semua jenis aset.
+- Dampak ke kode: `DendaFlat.hitung` dan `DendaProgresif.hitung`.
+- Tes yang membuktikan: `Minggu05AbstraksiTest.dendaFlatSamaDenganHitungDendaAset`, `Minggu05AbstraksiTest.dendaProgresifMemenuhiSyaratMinimal`.
