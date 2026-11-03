@@ -1,6 +1,6 @@
 package id.ac.upb.asetpinjam.model;
-import id.ac.upb.asetpinjam.config.Varian;
 
+import id.ac.upb.asetpinjam.config.Varian;
 import id.ac.upb.asetpinjam.kontrak.DapatDipinjam;
 
 /**
@@ -22,17 +22,17 @@ public abstract class Aset implements DapatDipinjam {
 
     /** TODO minggu 2: kode dan nama tidak boleh null atau kosong (IllegalArgumentException). */
     public Aset(String kode, String nama) {
-    if (kode == null || kode.trim().isEmpty()) {
-        throw new IllegalArgumentException("Kode tidak boleh null atau kosong");
+        if (kode == null || kode.trim().isEmpty()) {
+            throw new IllegalArgumentException("Kode tidak boleh null atau kosong");
+        }
+        if (nama == null || nama.trim().isEmpty()) {
+            throw new IllegalArgumentException("Nama tidak boleh null atau kosong");
+        }
+        this.kode = kode;
+        this.nama = nama;
+        this.status = StatusAset.TERSEDIA;
+        this.kondisi = Kondisi.BAIK;
     }
-    if (nama == null || nama.trim().isEmpty()) {
-        throw new IllegalArgumentException("Nama tidak boleh null atau kosong");
-    }
-    this.kode = kode;
-    this.nama = nama;
-    this.status = StatusAset.TERSEDIA;
-    this.kondisi = Kondisi.BAIK;
-}
 
     public String getKode() {
         return kode;
@@ -52,7 +52,7 @@ public abstract class Aset implements DapatDipinjam {
 
     /** TODO minggu 2: nama baru tidak boleh kosong. */
     public void setNama(String nama) {
-        if (nama == null || nama.isEmpty()) {
+        if (nama == null || nama.trim().isEmpty()) {
             throw new IllegalArgumentException("Nama tidak boleh null atau kosong");
         }
         this.nama = nama;
@@ -90,19 +90,19 @@ public abstract class Aset implements DapatDipinjam {
     public abstract long hitungDenda(int hariTerlambat);
 
     protected final long hitungDendaDenganMultiplier(
-        int hariTerlambat, long multiplier) {
+            int hariTerlambat, long multiplier) {
 
-    if (hariTerlambat < 0) {
-        throw new IllegalArgumentException(
-                "Hari terlambat tidak boleh negatif");
-    }
+        if (hariTerlambat < 0) {
+            throw new IllegalArgumentException(
+                    "Hari terlambat tidak boleh negatif");
+        }
 
-    if (hariTerlambat == 0) {
-        return 0L;
-    }
+        if (hariTerlambat == 0) {
+            return 0L;
+        }
 
-    return (long) hariTerlambat
-            * multiplier
-            * Varian.aktif().dendaPerHari;
+        return (long) hariTerlambat
+                * multiplier
+                * Varian.aktif().dendaPerHari;
     }
 }
