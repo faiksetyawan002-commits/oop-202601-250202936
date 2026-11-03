@@ -6,6 +6,7 @@ Saya mengimplementasikan konsep polimorfisme melalui mekanisme *method overridin
 
 ## Keputusan desain
 
+
 Pada minggu ini seluruh aturan bisnis sudah ditentukan secara pasti dalam spesifikasi sehingga tidak ada asumsi baru yang perlu dicatat di `docs/asumsi.md`. Untuk menjaga prinsip DRY (*Don't Repeat Yourself*), logika validasi hari negatif serta rumus dasar perhitungan denda dipusatkan di method helper `hitungDendaDenganMultiplier` pada class induk `Aset`, sehingga tiap subclass hanya perlu meneruskan nilai multiplier yang sesuai. Pada `KatalogAset`, method `cari(kata, jenis)` memanfaatkan kembali pemanggilan `cari(kata)` sebelum memfilter berdasarkan jenis aset, sehingga logika pemrosesan string nama tetap berada di satu tempat.
 
 ## Kendala
