@@ -1,25 +1,19 @@
 # Catatan Minggu 04: Polymorphism
 
 ## Yang saya kerjakan
-
-Saya mengimplementasikan konsep polimorfisme melalui mekanisme *method overriding* dan *method overloading*. Pada class `Aset` dan ketiga subclass-nya (`Ruang`, `Laptop`, dan `AlatLab`), saya menerapkan *overriding* pada method `hitungDenda(int)` di mana masing-masing subclass menerapkan multiplier tarif yang berbeda (Ruang 1x, Laptop 2x, AlatLab 4x) yang dieksekusi melalui *dynamic binding*. Selain itu, saya mengimplementasikan *overloading* pada class `KatalogAset` melalui dua variasi method `cari`: `cari(String kata)` untuk mencari aset berdasarkan nama secara *case-insensitive*, dan `cari(String kata, JenisAset jenis)` untuk menyaring hasil pencarian berdasarkan kata kunci sekaligus jenis asetnya.
+Saya menerapkan konsep polymorphism melalui overriding dan overloading pada sistem aset-pinjam. Pada bagian overriding, saya mengimplementasikan method `hitungDenda(int)` pada subclass `Ruang` (multiplier 1x), `Laptop` (multiplier 2x), dan `AlatLab` (multiplier 4x) yang dieksekusi secara polimorfis (*dynamic binding*) saat dipanggil melalui tipe induk `Aset`. Pada bagian overloading, saya membuat dua variasi method `cari` di `KatalogAset`: pencarian berdasarkan kata kunci nama secara *case-insensitive*, serta pencarian dengan tambahan filter `JenisAset`.
 
 ## Keputusan desain
-
-
-Pada minggu ini seluruh aturan bisnis sudah ditentukan secara pasti dalam spesifikasi sehingga tidak ada asumsi baru yang perlu dicatat di `docs/asumsi.md`. Untuk menjaga prinsip DRY (*Don't Repeat Yourself*), logika validasi hari negatif serta rumus dasar perhitungan denda dipusatkan di method helper `hitungDendaDenganMultiplier` pada class induk `Aset`, sehingga tiap subclass hanya perlu meneruskan nilai multiplier yang sesuai. Pada `KatalogAset`, method `cari(kata, jenis)` memanfaatkan kembali pemanggilan `cari(kata)` sebelum memfilter berdasarkan jenis aset, sehingga logika pemrosesan string nama tetap berada di satu tempat.
+Seluruh aturan perhitungan denda dan pencarian katalog sudah ditentukan secara pasti dalam panduan praktikum sehingga tidak ada penambahan asumsi di `docs/asumsi.md`. Untuk menghindari duplikasi kode (*DRY*), rumus dasar denda dan validasi hari negatif diletakkan di class induk `Aset` melalui method `hitungDendaDenganMultiplier`, sehingga subclass hanya perlu meneruskan multiplier masing-masing. Pada `KatalogAset`, overload `cari(kata, jenis)` memanfaatkan hasil dari `cari(kata)` lalu menyaringnya berdasarkan `JenisAset` agar logika pencocokan teks nama tidak berulang.
 
 ## Kendala
-
-Tantangan yang dihadapi adalah memastikan pencarian string pada `KatalogAset` tidak sensitif terhadap huruf besar/kecil (*case-insensitive*) dan menangani kemungkinan parameter bernilai null atau kosong dengan melempar `IllegalArgumentException`. Hal ini diselesaikan dengan memvalidasi parameter di awal method serta memanfaatkan Java Stream API dengan `toLowerCase()` untuk pencocokan nama yang aman dan konsisten.
+Kendala yang dihadapi adalah memastikan pencarian string pada `KatalogAset` bersifat *case-insensitive* serta menangani kemungkinan masukan `null` atau string kosong pada parameter `kata` dan `jenis`. Solusinya adalah menambahkan validasi `IllegalArgumentException` di awal method dan mengonversi string ke huruf kecil (`toLowerCase()`) sebelum mencocokkan teks dengan method `contains()`.
 
 ## Penggunaan AI
-
-- Alat yang dipakai: Antigravity (AI coding assistant)
-- Bagian yang dibantu AI: Penyusunan berkas refleksi `catatan/minggu-04.md`, evaluasi implementasi overriding `hitungDenda` pada subclass `Aset`, dan validasi overloading method `cari(...)` di `KatalogAset`
+- Alat yang dipakai: Google Gemini
+- Bagian yang dibantu AI: Penulisan method `hitungDenda` di subclass `Aset` dan pembuatan method overloading `cari` pada `KatalogAset`
 - Prompt utama:
-  1. "kerjakan @[docs/minggu-04.md] yang catatan saja"
-  2. "core/src/main/java/id/ac/upb/asetpinjam/katalog/KatalogAset.java: dua overload cari(...)"
-- Yang saya ubah atau tolak dari saran AI, dan alasannya: Memastikan method overload `cari(kata, jenis)` mendelegasikan penyaringan awal ke method `cari(kata)` agar tidak terjadi duplikasi logika lowercase dan validasi kata kunci.
-- Satu hal yang saya pahami lebih baik sekarang: Perbedaan fundamental antara *method overriding* yang ditentukan pada saat runtime melalui *dynamic method dispatch* (runtime polymorphism) dan *method overloading* yang ditentukan pada saat kompilasi berdasarkan signature argumen (compile-time polymorphism).
-
+  1. `"Tolong buatkan implementasi method hitungDenda(int hariTerlambat) di subclass Ruang, Laptop, dan AlatLab dengan multiplier 1x, 2x, dan 4x dari tarif varian, serta tolak hari negatif dengan IllegalArgumentException."`
+  2. `"Buatkan dua method overloading cari di class KatalogAset: cari(String kata) untuk pencarian nama case-insensitive dan cari(String kata, JenisAset jenis) yang hanya menyaring jenis aset tertentu."`
+- Yang saya ubah atau tolak dari saran AI, dan alasannya: Saran awal AI menuliskan ulang perulangan pencarian nama pada overload `cari(kata, jenis)`. Saya mengubahnya agar `cari(kata, jenis)` memanggil method `cari(kata)` terlebih dahulu lalu memfilter jenisnya menggunakan stream agar kode lebih modular dan tidak menduplikasi validasi teks.
+- Satu hal yang saya pahami lebih baik sekarang: Perbedaan nyata antara *overriding* (polimorfisme runtime di mana method yang dieksekusi ditentukan oleh objek konkret saat berjalan) dan *overloading* (polimorfisme compile-time di mana penentuan method didasarkan pada tanda tangan parameter saat kompilasi).

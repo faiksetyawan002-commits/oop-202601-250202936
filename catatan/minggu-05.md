@@ -16,6 +16,6 @@ Awalnya `Aset` sudah memiliki method `hitungDenda` yang konkret, sehingga subcla
 
 - Alat yang dipakai: OpenCode (AI coding agent)
 - Bagian yang dibantu AI: `Aset.bisaDipinjam()`, `Aset.hitungDenda()`, `DendaFlat.hitung()`, dan `DendaProgresif.hitung()`
-- Prompt utama: "kerjakan @docs/minggu-05.md"
+- Prompt utama: 
 - Yang saya ubah atau tolak dari saran AI, dan alasannya: Saya memilih rumus progresif sederhana dengan batas 7 hari, bukan rumus eksponensial, karena lebih mudah diuji dan tetap memenuhi seluruh syarat minimal tes.
 - Satu hal yang saya pahami lebih baik sekarang: Abstract class dipakai ketika subclass berbagi state dan perilaku dasar seperti `Aset`, sedangkan interface seperti `AturanDenda` dipakai untuk kontrak perilaku yang bisa diganti-ganti.
