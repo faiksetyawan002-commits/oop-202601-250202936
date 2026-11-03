@@ -13,7 +13,8 @@ Kendala yang dihadapi adalah memastikan pencarian string pada `KatalogAset` bers
 - Alat yang dipakai: Google Gemini
 - Bagian yang dibantu AI: Penulisan method `hitungDenda` di subclass `Aset` dan pembuatan method overloading `cari` pada `KatalogAset`
 - Prompt utama:
-  1. `"Tolong buatkan implementasi method hitungDenda(int hariTerlambat) di subclass Ruang, Laptop, dan AlatLab dengan multiplier 1x, 2x, dan 4x dari tarif varian, serta tolak hari negatif dengan IllegalArgumentException."`
-  2. `"Buatkan dua method overloading cari di class KatalogAset: cari(String kata) untuk pencarian nama case-insensitive dan cari(String kata, JenisAset jenis) yang hanya menyaring jenis aset tertentu."`
+  1. Tolong buatkan implementasi method hitungDenda(int hariTerlambat) di subclass Ruang, Laptop, dan AlatLab dengan multiplier 1x, 2x, dan 4x dari tarif varian, serta tolak hari negatif dengan IllegalArgumentException.
+  2. Buatkan dua method overloading cari di class KatalogAset: cari(String kata) untuk pencarian nama case-insensitive dan cari(String kata, JenisAset jenis) yang hanya menyaring jenis aset tertentu.
+  
 - Yang saya ubah atau tolak dari saran AI, dan alasannya: Saran awal AI menuliskan ulang perulangan pencarian nama pada overload `cari(kata, jenis)`. Saya mengubahnya agar `cari(kata, jenis)` memanggil method `cari(kata)` terlebih dahulu lalu memfilter jenisnya menggunakan stream agar kode lebih modular dan tidak menduplikasi validasi teks.
 - Satu hal yang saya pahami lebih baik sekarang: Perbedaan nyata antara *overriding* (polimorfisme runtime di mana method yang dieksekusi ditentukan oleh objek konkret saat berjalan) dan *overloading* (polimorfisme compile-time di mana penentuan method didasarkan pada tanda tangan parameter saat kompilasi).
