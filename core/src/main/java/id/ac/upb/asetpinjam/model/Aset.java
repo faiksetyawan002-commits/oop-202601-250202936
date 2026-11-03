@@ -74,19 +74,16 @@ public abstract class Aset implements DapatDipinjam {
         this.kondisi = kondisi;
     }
 
-    /** True hanya jika status TERSEDIA dan kondisi bukan RUSAK_BERAT. */
+    /** TODO minggu 5: true hanya jika status TERSEDIA dan kondisi bukan RUSAK_BERAT. */
     @Override
     public boolean bisaDipinjam() {
         return status == StatusAset.TERSEDIA && kondisi != Kondisi.RUSAK_BERAT;
     }
 
-    /** Dioverride tiap subclass agar mengembalikan jenis yang benar. */
+    /** TODO minggu 3: Dioverride tiap subclass agar mengembalikan jenis yang benar. */
     public abstract JenisAset getJenis();
 
-    /**
-     * Menghitung denda keterlambatan.
-     * Dioverride tiap subclass karena multiplier berbeda per jenis aset.
-     */
+    /**TODO minggu 4: denda keterlambatan. Dioverride tiap subclass (aturan di docs/aturan-bisnis.md) */
     public abstract long hitungDenda(int hariTerlambat);
 
     protected final long hitungDendaDenganMultiplier(
