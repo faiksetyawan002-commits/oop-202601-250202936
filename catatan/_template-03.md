@@ -10,7 +10,7 @@ Saya memutuskan bahwa@ atribut umum yang dimiliki semua aset seperti `id`, `nama
 Tantangan utamanya adalah memastikan validasi data dilakukan di tempat yang tepat agar tidak terjadi duplikasi kode. Saya mengatasinya dengan mendelegasikan pengecekan atribut dasar ke konstruktor `Aset` melalui pemanggilan `super()`, lalu melanjutkan pengecekan atribut spesifik setelahnya di dalam subclass.
 
 ## Penggunaan AI
-- Alat yang dipakai: Gemini
+- Alat yang dipakai: Google Gemini
 - Bagian yang dibantu AI: Implementasi boilerplate untuk `Ruang`, `Laptop`, dan `AlatLab`, serta merumuskan contoh konseptual keterbatasan inheritance vs komposisi.
 - Prompt utama: Prompt yang berisi instruksi penugasan Minggu 3 dengan detail aturan validasi dan syarat pengumpulan.
 - Yang saya ubah atau tolak dari saran AI, dan alasannya: Saya menyesuaikan argumen di pemanggilan `super()` dengan atribut yang persis ada di class `Aset` saya, karena AI hanya membuat parameter asumsi generik (`id`, `nama`).
