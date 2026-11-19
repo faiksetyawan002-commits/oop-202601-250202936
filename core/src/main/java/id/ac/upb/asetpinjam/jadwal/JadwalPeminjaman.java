@@ -1,9 +1,15 @@
 package id.ac.upb.asetpinjam.jadwal;
 
 import id.ac.upb.asetpinjam.model.Peminjaman;
+import id.ac.upb.asetpinjam.model.StatusPeminjaman;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Jadwal peminjaman di memori.
@@ -12,6 +18,13 @@ import java.util.Map;
  * tambah() DISEDIAKAN dan sengaja TIDAK memeriksa apa pun.
  */
 public class JadwalPeminjaman {
+
+    private static final Set<StatusPeminjaman> STATUS_TIDAK_MENEMPATI_JADWAL = EnumSet.of(
+            StatusPeminjaman.DITOLAK, StatusPeminjaman.DIBATALKAN, StatusPeminjaman.DIKEMBALIKAN);
+
+    private static final Comparator<Peminjaman> URUT_MULAI = Comparator.comparing(Peminjaman::getMulai)
+            .thenComparing(Peminjaman::getSelesai)
+            .thenComparing(Peminjaman::getId);
 
     private final List<Peminjaman> daftar = new ArrayList<>();
     private final int kuotaLaptop;
@@ -34,26 +47,40 @@ public class JadwalPeminjaman {
     }
 
     /**
-     * TODO minggu 7: true jika {@code baru} bentrok dengan peminjaman yang sudah ada untuk ASET YANG SAMA.
-     * Definisi "bentrok" di batas waktu (selesai sama dengan mulai) adalah KEPUTUSAN ANDA (docs/asumsi.md).
+     * Memeriksa apakah {@code baru} bentrok dengan peminjaman aktif pada aset yang sama.
+     * Interval waktu diperlakukan setengah terbuka {@code [mulai, selesai)}, sehingga
+     * selesai tepat sama dengan mulai tidak dianggap bentrok.
      */
     public boolean bentrok(Peminjaman baru) {
-        throw new UnsupportedOperationException("TODO minggu 7: bentrok");
+        if (baru == null) {
+            throw new IllegalArgumentException("Peminjaman tidak boleh null");
+        }
+        String kodeAset = baru.getAset().getKode();
+        return daftar.stream()
+                .filter(ada -> !STATUS_TIDAK_MENEMPATI_JADWAL.contains(ada.getStatus()))
+                .filter(ada -> ada.getAset().getKode().equals(kodeAset))
+                .anyMatch(ada -> baru.getMulai().isBefore(ada.getSelesai())
+                        && ada.getMulai().isBefore(baru.getSelesai()));
     }
 
-    /** TODO minggu 7: semua peminjaman, diurutkan menurut waktu mulai (gunakan Comparator). */
+    /** Semua peminjaman diurutkan menaik menurut waktu mulai. */
     public List<Peminjaman> semuaUrutMulai() {
-        throw new UnsupportedOperationException("TODO minggu 7: semuaUrutMulai");
+        return daftar.stream().sorted(URUT_MULAI).toList();
     }
 
-    /** TODO minggu 7: peminjaman dikelompokkan menurut kode aset. */
+    /** Peminjaman dikelompokkan menurut kode aset. */
     public Map<String, List<Peminjaman>> perAset() {
-        throw new UnsupportedOperationException("TODO minggu 7: perAset");
+        return daftar.stream()
+                .collect(Collectors.groupingBy(
+                        p -> p.getAset().getKode(), LinkedHashMap::new, Collectors.toList()));
     }
 
-    /** TODO minggu 7: hapus peminjaman berdasarkan id. True jika ada yang terhapus. */
+    /** Menghapus peminjaman berdasarkan id. Mengembalikan true jika ada yang terhapus. */
     public boolean hapus(String id) {
-        throw new UnsupportedOperationException("TODO minggu 7: hapus");
+        if (id == null || id.isBlank()) {
+            return false;
+        }
+        return daftar.removeIf(p -> p.getId().equals(id));
     }
 
     /**

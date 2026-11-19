@@ -20,10 +20,17 @@ Salin setiap pertanyaan ambigu (nomor 1 sampai 7) ke sini dan jawab. Contoh:
 
 ## A-01: batas waktu bentrok
 - Pertanyaan: 09:00-11:00 dan 11:00-13:00 pada aset yang sama bentrok atau tidak?
-- Keputusan: (isi)
-- Alasan: (isi)
-- Dampak ke kode: (isi)
-- Tes yang membuktikan: (isi)
+- Keputusan: Tidak bentrok. Rentang waktu peminjaman diperlakukan sebagai interval setengah terbuka `[mulai, selesai)`, sehingga dua peminjaman hanya bentrok bila `baru.mulai < ada.selesai` dan `ada.mulai < baru.selesai`.
+- Alasan: Peminjaman pertama berakhir tepat pukul 11:00 dan peminjaman kedua baru dimulai pukul 11:00, sehingga tidak ada irisan waktu penggunaan aset dan jadwal berurutan (*back-to-back*) dimungkinkan.
+- Dampak ke kode: `JadwalPeminjaman.bentrok(Peminjaman)` pada `id.ac.upb.asetpinjam.jadwal.JadwalPeminjaman`.
+- Tes yang membuktikan: `BatasBentrokTest.selesaiSamaDenganMulai`, `BatasBentrokTest.mulaiSamaDenganSelesaiTerbalik`, `BatasBentrokTest.rentangSamaPersisBentrok`.
+
+## A-07: status peminjaman yang menempati jadwal
+- Pertanyaan: Apakah peminjaman berstatus `DITOLAK` atau `DIBATALKAN` (serta `DIKEMBALIKAN`) masih menempati jadwal pada pemeriksaan bentrok?
+- Keputusan: Tidak. Peminjaman dengan status `DITOLAK`, `DIBATALKAN`, dan `DIKEMBALIKAN` tidak dianggap menempati jadwal saat memeriksa bentrok, sedangkan status `DIAJUKAN`, `DISETUJUI`, `DIPINJAM`, dan `TERLAMBAT` tetap menempati jadwal.
+- Alasan: Pengajuan yang sudah ditolak, dibatalkan, atau asetnya telah dikembalikan membebaskan slot waktu agar dapat dipinjam kembali oleh peminjam lain.
+- Dampak ke kode: `JadwalPeminjaman.bentrok(Peminjaman)` menggunakan `STATUS_TIDAK_MENEMPATI_JADWAL`.
+- Tes yang membuktikan: `BatasBentrokTest.statusDitolakDibatalkanDanDikembalikanTidakMenghalangiJadwal`.
 
 ## Asumsi lain
 
